@@ -1,0 +1,23 @@
+{
+  "name": "@iguazu/coati",
+  "version": "0.1.2",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf ./lib",
+    "build": "gulp build",
+    "build:prod": "NODE_ENV=production gulp build:prod",
+    "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix": "tslint --project tsconfig.json --fix"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@iguazu/puma": "0.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Fernando Berti <bertilxi@gmail.com>",
+  "description": ""
+}

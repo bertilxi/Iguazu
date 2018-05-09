@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["esnext"],
+    "outDir": "lib",
+    "declaration": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "inlineSources": false,
+    "types": ["node"]
+  },
+  "include": ["src/**/*"]
+}

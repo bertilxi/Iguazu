@@ -1,0 +1,51 @@
+{
+  "name": "@iguazu/puma",
+  "version": "0.2.14",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf ./lib",
+    "build": "tsc",
+    "build:prod": "NODE_ENV=production tsc",
+    "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix": "tslint --project tsconfig.json --fix"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/bluebird": "^3.5.20",
+    "@types/bookshelf": "^0.9.8",
+    "@types/boom": "^7.2.0",
+    "@types/dotenv": "^4.0.3",
+    "@types/jsonwebtoken": "^7.2.7",
+    "@types/knex": "^0.14.12",
+    "@types/lodash": "^4.14.108",
+    "@types/node": "^10.0.4",
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
+    "bookshelf": "^0.13.3",
+    "bookshelf-eloquent": "^0.1.15",
+    "bookshelf-paranoia": "^0.11.0",
+    "boom": "^7.2.0",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "fast-safe-stringify": "^2.0.4",
+    "fastify": "^1.4.0",
+    "fastify-boom": "^0.1.0",
+    "fastify-helmet": "^1.0.3",
+    "fastify-plugin": "^1.0.1",
+    "jsonwebtoken": "^8.2.1",
+    "knex": "^0.14.6",
+    "lodash": "^4.17.10",
+    "nodemon": "^1.17.3",
+    "pg": "^7.4.2",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.1.0",
+    "socket.io": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Fernando Berti <bertilxi@gmail.com>",
+  "description": ""
+}

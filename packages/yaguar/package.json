@@ -1,0 +1,44 @@
+{
+  "name": "@iguazu/yaguar",
+  "version": "0.1.9",
+  "main": "./lib/cli.js",
+  "scripts": {
+    "prebuild": "rimraf ./lib",
+    "build": "tsc",
+    "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix": "tslint --project tsconfig.json --fix"
+  },
+  "bin": {
+    "yaguar": "./lib/cli.js"
+  },
+  "engines": {
+    "node": ">=8.9"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^10.0.0",
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "cross-spawn": "^6.0.5",
+    "dotenv": "^5.0.1",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "interpret": "^1.1.0",
+    "json-loader": "^0.5.7",
+    "liftoff": "^2.5.0",
+    "minimist": "^1.2.0",
+    "nodemon": "^1.17.3",
+    "ramda": "^0.25.0",
+    "source-map-support": "^0.5.5",
+    "tildify": "^1.2.0",
+    "ts-loader": "^4.2.0",
+    "v8flags": "^3.0.2",
+    "webpack": "^4.6.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Fernando Berti <bertilxi@gmail.com>",
+  "description": ""
+}
