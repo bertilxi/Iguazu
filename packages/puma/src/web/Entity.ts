@@ -477,7 +477,7 @@ export function Reactive(target) {
 }
 
 export interface RepositoryOptions {
-  fetch: Partial<Bookshelf.FetchOptions | Bookshelf.FetchAllOptions>;
+  fetch: Partial<Bookshelf.FetchOptions & Bookshelf.FetchAllOptions>;
   listenTo: string[];
   disable: string[];
 }
@@ -485,6 +485,7 @@ export interface RepositoryOptions {
 export interface RepositoryParameter {
   path: string;
   options: Partial<RepositoryOptions>;
+  hidden: string[];
 }
 
 const defaults = {
@@ -496,6 +497,7 @@ const defaults = {
 
 export function Repository({
   path,
+  hidden,
   options
 }: Partial<RepositoryParameter> = {}): ClassDecorator {
   return target => {
@@ -514,6 +516,7 @@ export function Repository({
         });
       },
       tableName,
+      hidden,
       softDelete: true
     };
 

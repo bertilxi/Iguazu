@@ -1,0 +1,27 @@
+{
+  "name": "@iguazu/tucan",
+  "version": "0.1.0",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf ./lib",
+    "prebuild:prod": "rimraf ./lib",
+    "build": "webpack",
+    "build:prod": "webpack -p",
+    "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix": "tslint --project tsconfig.json --fix"
+  },
+  "dependencies": {
+    "vue": "^2.5.16",
+    "axios": "^0.18.0",
+    "dayjs": "^1.5.20",
+    "rxjs": "^6.1.0",
+    "socket.io-client": "^2.1.0",
+    "vue-i18n": "^7.6.0",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "vuex-persist": "^1.2.2"
+  }
+}

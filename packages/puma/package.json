@@ -1,6 +1,6 @@
 {
   "name": "@iguazu/puma",
-  "version": "0.2.14",
+  "version": "0.2.17",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {

@@ -1,4 +1,4 @@
-import { Repository, BelongsToMany, WebModel } from "@iguazu/puma";
+import { BelongsToMany, Repository } from "@iguazu/puma";
 
 @Repository({
   options: { fetch: { withRelated: ["users"] } }
@@ -8,4 +8,4 @@ export class RoleRepository {
   public users;
 }
 
-export const Role: WebModel = new RoleRepository() as any;
+export const Role: Repository = new RoleRepository() as any;

@@ -1,12 +1,12 @@
 {
   "name": "@iguazu/coati",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "prebuild": "rimraf ./lib",
-    "build": "gulp build",
-    "build:prod": "NODE_ENV=production gulp build:prod",
+    "build": "tsc",
+    "build:prod": "NODE_ENV=production tsc",
     "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --project tsconfig.json --fix"
