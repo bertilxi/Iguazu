@@ -1,7 +1,6 @@
 import * as boomPlugin from "fastify-boom";
 import * as helmetPlugin from "fastify-helmet";
 
-import { SsePlugin } from "../plugin";
 import { Controller, Get } from "./Controller";
 import { Plugin } from "./Plugin";
 
@@ -32,11 +31,10 @@ export function Module({
 
 export const defaultPlugins = [
   new Plugin(boomPlugin),
-  new Plugin(helmetPlugin),
-  new Plugin(SsePlugin)
+  new Plugin(helmetPlugin)
 ];
 
-@Controller({ path: "/" })
+@Controller({ path: "/", secure: false })
 class DefaultController {
   @Get("/")
   public async root() {

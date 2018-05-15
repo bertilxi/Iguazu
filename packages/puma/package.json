@@ -1,6 +1,6 @@
 {
   "name": "@iguazu/puma",
-  "version": "0.2.17",
+  "version": "0.3.7",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -18,9 +18,9 @@
     "@types/boom": "^7.2.0",
     "@types/dotenv": "^4.0.3",
     "@types/jsonwebtoken": "^7.2.7",
-    "@types/knex": "^0.14.12",
+    "@types/knex": "^0.14.14",
     "@types/lodash": "^4.14.108",
-    "@types/node": "^10.0.4",
+    "@types/node": "^10.0.8",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",
     "bookshelf": "^0.13.3",
@@ -37,8 +37,8 @@
     "jsonwebtoken": "^8.2.1",
     "knex": "^0.14.6",
     "lodash": "^4.17.10",
-    "nodemon": "^1.17.3",
-    "pg": "^7.4.2",
+    "nodemon": "^1.17.4",
+    "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.1.0",
     "socket.io": "^2.1.0"
@@ -46,6 +46,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Fernando Berti <bertilxi@gmail.com>",
-  "description": ""
+  "author": "Fernando Berti <bertilxi@gmail.com>"
 }

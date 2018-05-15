@@ -12,7 +12,7 @@ import * as Knex from "knex";
 import { kebabCase, snakeCase } from "lodash";
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
-import { bookshelf } from "../database";
+import { bookshelf, Migration } from "../database";
 import { eventBus, store } from "../service";
 import { Controller, Delete, Get, Post } from "./Controller";
 
@@ -268,6 +268,15 @@ export function BelongsToMany(...args) {
   };
 }
 
+export function Prop(
+  callback: (tableBuilder: Knex.CreateTableBuilder) => any
+): PropertyDecorator {
+  return (target: any, propertyKey: string | symbol) => {
+    target.props = target.props || {};
+    target.props[propertyKey] = callback;
+  };
+}
+
 function isDisabled(options: any, method: string) {
   return !!options.disable.find(d => d === method);
 }
@@ -476,6 +485,25 @@ export function Reactive(target) {
   return target;
 }
 
+export function Migrated(target) {
+  // TODO: check tableName origin
+  target.migration = new Migration(
+    knex => {
+      return knex.schema.createTable(target.tableName, table => {
+        table.increments();
+        table.timestamps(true, true);
+        table.timestamp("deleted_at");
+
+        Object.keys(target.props).forEach(key => {
+          const prop = target.props[key];
+          prop(table);
+        });
+      });
+    },
+    knex => knex.schema.dropTableIfExists(target.tableName)
+  );
+}
+
 export interface RepositoryOptions {
   fetch: Partial<Bookshelf.FetchOptions & Bookshelf.FetchAllOptions>;
   listenTo: string[];
@@ -494,6 +522,13 @@ const defaults = {
   sse: false,
   ws: true
 };
+
+export interface IEntity {
+  controller: Controller;
+  wsController: Controller;
+}
+
+export type Entity = Repository & IEntity;
 
 export function Repository({
   path,

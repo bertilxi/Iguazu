@@ -40,6 +40,10 @@ export function Options(path, options = {}) {
   return RequestMapping({ path, method });
 }
 
+export interface Controller {
+  path: string;
+  handler: PluginHandler;
+}
 export function Controller({ path = "", secure = true } = {}) {
   return target => {
     const reflectedName = target.name.split("Controller")[0];
