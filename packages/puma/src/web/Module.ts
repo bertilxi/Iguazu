@@ -3,12 +3,13 @@ import * as helmetPlugin from "fastify-helmet";
 
 import { Controller, Get } from "./Controller";
 import { Plugin } from "./Plugin";
+import { store } from "../service";
 
-export abstract class WebModule {
-  public controllers: any[];
-  public entities: any[];
-  public migrationsPath: string;
-  public seedsPath: string;
+export interface Module {
+  controllers: any[];
+  entities: any[];
+  migrationsPath: string;
+  seedsPath: string;
 }
 
 export function Module({
@@ -16,7 +17,7 @@ export function Module({
   entities = [],
   migrationsPath = "",
   seedsPath = ""
-}: Partial<WebModule>) {
+}: Partial<Module>) {
   return target => {
     const name = target.name.split("Module")[0];
     target.prototype.name = name;
@@ -26,6 +27,11 @@ export function Module({
     target.prototype.seedsPath = seedsPath;
     Object.freeze(target);
     Object.freeze(target.prototype);
+
+    const module = new target();
+    const modules = store.get<Module[]>("modules") || [];
+    modules.push(module);
+    store.set("modules", modules);
   };
 }
 
@@ -45,6 +51,6 @@ class DefaultController {
 }
 
 @Module({
-  controllers: [new DefaultController()]
+  controllers: [DefaultController]
 })
-export class DefaultModule extends WebModule {}
+export class DefaultModule {}

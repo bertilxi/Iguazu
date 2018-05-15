@@ -1,21 +1,16 @@
 import * as cors from "cors";
 import * as fastify from "fastify";
 import { FastifyInstance } from "fastify";
-import { Constructor } from "./decorator";
 import * as IO from "socket.io";
+import { Constructor } from "./decorator";
 import { store } from "./service";
-import {
-  WaterfallController,
-  WebController,
-  WebModule,
-  DefaultModule,
-  defaultPlugins,
-  Plugin
-} from "./web";
+import { Controller, Plugin, defaultPlugins } from "./web";
+import "./web/Module";
+import "./web/Waterfall";
 
 function registerPlugins() {
   const server: FastifyInstance = store.get("server");
-  const plugins: Plugin[] = store.get("plugins");
+  const plugins: Plugin[] = store.get("plugins") || [];
 
   plugins.forEach(plugin => {
     server.register(plugin.handler, plugin.options);
@@ -24,12 +19,7 @@ function registerPlugins() {
 
 function registerControllers() {
   const server: FastifyInstance = store.get("server");
-  const controllers: WebController[] = store.get("controllers");
-  const waterfall: any = new WaterfallController();
-
-  if (store.get("batch")) {
-    controllers.unshift(waterfall);
-  }
+  const controllers = store.get<Controller[]>("controllers") || [];
 
   controllers.forEach(controller => {
     server.register(controller.handler, {
@@ -38,25 +28,9 @@ function registerControllers() {
   });
 }
 
-function registerEntities() {
-  const server: FastifyInstance = store.get("server");
-  const entities: any[] = store.get("entities");
-
-  entities.forEach(({ controller, options, sseController }) => {
-    server.register(controller.handler, {
-      prefix: controller.path
-    });
-    if (options.sse && sseController) {
-      server.register(sseController.handler, {
-        prefix: sseController.path
-      });
-    }
-  });
-}
-
 function startServer() {
-  const server: FastifyInstance = store.get("server");
-  const port: string = store.get("port");
+  const server = store.get<FastifyInstance>("server");
+  const port = store.get<string>("port");
 
   server
     .ready()
@@ -77,7 +51,7 @@ function startServer() {
 }
 
 export interface BootstrapOptions {
-  modules: WebModule[];
+  modules: any[];
   port?: string;
   withDefault?: boolean;
   withAuth?: boolean;
@@ -126,33 +100,15 @@ export function bootstrap({
     server.use(cors());
   }
 
-  if (withDefault) {
-    modules.unshift(new DefaultModule());
-  }
-
   store.set("io", io);
   store.set("withAuth", withAuth);
   store.set("isDev", isDev);
-  store.set("sse", sse);
   store.set("batch", batch);
   store.set("port", port);
   store.set("server", server);
   store.set("plugins", [...defaultPlugins, ...plugins]);
-  store.set(
-    "controllers",
-    modules
-      .map(m => m.controllers)
-      .reduce((flat, toFlatten) => flat.concat(toFlatten))
-  );
-  store.set(
-    "entities",
-    modules
-      .map(m => m.entities)
-      .reduce((flat, toFlatten) => flat.concat(toFlatten))
-  );
 
   registerPlugins();
-  registerEntities();
   registerControllers();
 
   return startServer();

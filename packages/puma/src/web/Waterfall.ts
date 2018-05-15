@@ -3,6 +3,7 @@ import * as Boom from "boom";
 import { bookshelf } from "../database";
 import { iguazu, store } from "../service";
 import { Controller, Post } from "./Controller";
+import { Entity } from "./Entity";
 
 export type QueryAction =
   | "findAll"
@@ -35,17 +36,17 @@ export class WaterfallController {
     await bookshelf.transaction(async trx => {
       const promises = querys.map(
         ({ model, action, data, options = {} }: WaterfallQuery) => {
-          const repository = store
-            .get("repositories")
+          const entity = store
+            .get<Entity[]>("entities")
             .find(r => r.name === model);
 
-          if (!repository) {
+          if (!entity) {
             throw Boom.badData("Missing model");
           }
           if (!action) {
             throw Boom.badData("Missing action");
           }
-          const actionFn = repository.model[action];
+          const actionFn = entity[action];
           return actionFn({ body: data }, options, trx);
         }
       );

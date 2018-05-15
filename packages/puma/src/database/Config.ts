@@ -4,24 +4,12 @@ import * as Path from "path";
 import * as pg from "pg";
 
 import { store } from "../service";
-import { Observable } from "rxjs";
 
 require("dotenv").config();
 pg.types.setTypeParser(20, "text", parseInt);
 
 export interface IBookshelf extends Bookshelf {
   model(modelName: string, props: any);
-}
-
-export interface WebModel extends Bookshelf.Model<any> {
-  findAll: (...args) => Promise<any>;
-  findById: (...args) => Promise<any>;
-  upsert: (...args) => Promise<any>;
-  remove: (...args) => Promise<any>;
-  recover: (...args) => Promise<any>;
-  forge: (props?: any, options?: any) => any;
-  watch: (opts?) => Observable<any>;
-  watchAll: (opts?) => Observable<any>;
 }
 
 const env = process.env.NODE_ENV || "development";

@@ -48,26 +48,25 @@ export function Controller({ path = "", secure = true } = {}) {
   return target => {
     const reflectedName = target.name.split("Controller")[0];
     target.prototype.path = path || `/${kebabCase(reflectedName)}`;
-    Object.defineProperty(target.prototype, "handler", {
-      get: () => {
-        return (instance, opts, next) => {
-          const withAuth = store.get("withAuth");
-          if (withAuth && secure) {
-            instance.addHook("preHandler", authMiddleware);
-          }
-          const methods = ["get", "post", "put", "patch", "delete"];
-          methods.forEach(method => {
-            target.prototype[method] = target.prototype[method] || [];
-            target.prototype[method].forEach(m => {
-              instance[method](m.path, m.handler);
-            });
-          });
-          next();
-        };
-      },
-      enumerable: true,
-      configurable: true
-    });
+    target.prototype.handler = (instance, opts, next) => {
+      const withAuth = store.get("withAuth");
+      if (withAuth && secure) {
+        instance.addHook("preHandler", authMiddleware);
+      }
+      const methods = ["get", "post", "put", "patch", "delete"];
+      methods.forEach(method => {
+        target.prototype[method] = target.prototype[method] || [];
+        target.prototype[method].forEach(m => {
+          instance[method](m.path, m.handler.bind(target.prototype));
+        });
+      });
+      next();
+    };
+
+    const controller = new target();
+    const controllers = store.get<Controller[]>("controllers") || [];
+    controllers.push(controller);
+    store.set("controllers", controllers);
   };
 }
 

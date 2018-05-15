@@ -16,6 +16,9 @@ import { bookshelf, Migration } from "../database";
 import { eventBus, store } from "../service";
 import { Controller, Delete, Get, Post } from "./Controller";
 
+import { Singleton } from "phreatic";
+import * as io from "socket.io";
+
 export type Value =
   | string
   | number
@@ -432,32 +435,8 @@ export function Reactive(target) {
     );
   };
 
-  if (target.options.sse) {
-    @Controller({ path: `/sse${target.path}` })
-    class SseController {
-      @Get("/")
-      public watchAll(request, reply) {
-        target.watchAll().subscribe(data => {
-          (reply as any).sse(data);
-        });
-      }
-      @Get("/:id")
-      public watch(request, reply) {
-        const id = request.params.id;
-        if (!id) {
-          throw Boom.badData(`Entity ${target.name} undefined ID`);
-        }
-        target.watch({ id }).subscribe(data => {
-          (reply as any).sse(data);
-        });
-      }
-    }
-
-    target.sseController = new SseController();
-  }
-
   if (target.options.ws) {
-    const ws = store.get("io");
+    const ws = store.get<io.Server>("io");
     @Controller({ path: `/ws${target.path}` })
     class WsController {
       @Get("/")
@@ -519,18 +498,19 @@ export interface RepositoryParameter {
 const defaults = {
   disable: [],
   rest: true,
-  sse: false,
   ws: true
 };
 
 export interface IEntity {
+  options;
+  name: string;
   controller: Controller;
   wsController: Controller;
 }
 
 export type Entity = Repository & IEntity;
 
-export function Repository({
+export function Entity({
   path,
   hidden,
   options
@@ -562,6 +542,9 @@ export function Repository({
     let model = bookshelf.model(name, props);
     model.path = `/${kebabCase(name)}` || path;
     model.options = Object.assign({}, defaults, options);
+    Object.defineProperty(model, "name", { value: name });
+
+    model = Reactive(Controlled(model));
 
     const f: any = () => {
       return model;
@@ -569,8 +552,13 @@ export function Repository({
 
     Object.defineProperty(f, "name", { value: target.name });
 
-    model = Reactive(Controlled(model));
+    const newTarget = Singleton(f);
+    const entity = new newTarget();
 
-    return f;
+    const entities = store.get<Entity[]>("entities") || [];
+    entities.push(entity);
+    store.set("entities", entities);
+
+    return newTarget;
   };
 }
